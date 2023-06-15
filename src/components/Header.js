@@ -49,6 +49,7 @@ const Header = (props)=>{
                   
                     <NavLink to="/" className="nav-link">Home</NavLink>
                      <NavLink to="/users" className="nav-link">Manage users</NavLink>
+                     <NavLink to='/docs' className="nav-link">Manage documments</NavLink>
                   </Nav>  
                 <Nav>
                     {user && user.email && <span className='nav-link'>Welcome {user.email} </span>}
