@@ -2,31 +2,29 @@ const Home =()=>{
     return(<>
         <div className="home-container">
             <div className="mt-3">
-                Yêu cầu:
+                
                 <br/>
-                Sử dụng API từ trang ................
+                Bạn đang ở trang chủ.
             </div>
             <div>
-                Sử dụng thư viện React để tạo một màn hình Website cơ bản bao gồm các chức năng
+                Bạn có thể tra cứu các tài liệu nằm trong cụm tủ này.
             </div>
             <ul>
-                <li>1.      Đăng nhập </li>
-                <li>2.      Thêm User</li>
-                <li>3.      Sửa User</li>
-                <li>4.      Xóa User</li>
-                <li>5.      Hiển thị tất cả các User</li>
-                <li>6.      TÌm kiếm User theo ID</li>
-                <li>7.      Sắp xếp theo Fristname</li>
+                <li>Để tra cứu tài liệu, bạn click vào Documents </li>
+                <li>Để tra cứu lịch sử hoạt động của cụm tủ, bạn click vào History</li>
+                <li>Để tra cứu lịch bảo trì của cụm tủ, bạn click vào Maintenance</li>
+            
             </ul>
             <div>
-                Tự do tùy chỉnh html, css để có 1 Website nhẹ nhàng, khoa học và đẹp
+                Hướng dẫn tra tài liệu, bạn vào Documents, sử dụng ô tìm kiếm để tra cứu tài liệu theo tên tài liệu.
+                Bấm nút " Borrow" để mượn tài liệu.
             </div>
             <div>
-                Đẩy lên github
+                Liên hệ:
                 <br/>
-                TRiển khai Website
+                Nguyễn Văn A
             </div>
-            <br/>
+            {/* <br/>
             <b>Result: </b>
             Thời gian hoàn thành: 1-3 ngày
             <br/>
@@ -34,7 +32,7 @@ const Home =()=>{
             <br/>
             THời gian phản hồi 2 ngày làm việc
             <br/>
-            Sử dụng python Django rest framework, tạo các api như trên trang web
+            Sử dụng python Django rest framework, tạo các api như trên trang web */}
         </div>
     </>)
 }

@@ -2,20 +2,32 @@ import { useState } from "react";
 import { Modal, Button} from "react-bootstrap";
 import {postCreateDocs} from "../services/UserService";
 import { toast } from 'react-toastify';
+import { create } from "lodash";
 const ModelAddNewDocs=(props)=>{
     const{show, handleClose,handleUpdateTable}=props;
     const[name,setName]=useState("");
-    const[job,setJob]=useState("");
-
+    const[author,setAuthor]=useState("");
+    const[rack,setRack] = useState("");
+    const[ID,setID]=useState("");
+    
     const handleSaveDocs = async () => {
-        let res = await postCreateDocs(name,job);
+    var today = new Date();
+    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    console.log(">>day:",date)
+    console.log(">>time:",time)
+    let createTime = date+'T'+time+'Z'
+        let createDoc = {id:ID,name,author,rack_id_Document:rack,created_at:createTime}
+        let res = await postCreateDocs(createDoc);
         console.log(">>> check res:",res)
         if (res && res.id) {
             handleClose();
             setName('');
-            setJob('');
+            setAuthor('');
+            setRack('');
+            setID('');
             toast.success(" A Doccumment is created succeed!");
-            props.handleUpdateTable({title: name,id:res.id});
+            props.handleUpdateTable(createDoc);
             //success
         }
         else {
@@ -23,6 +35,7 @@ const ModelAddNewDocs=(props)=>{
             toast.error(" An Error!")
 
         }
+        console.log(createDoc)
     }
     return(
         <>
@@ -36,7 +49,15 @@ const ModelAddNewDocs=(props)=>{
             </Modal.Header>
             <Modal.Body>
                 <div className='body-add-new'>
-                    
+                    <div className="mb-3">
+                        <label className="form-label">ID</label>
+                        <input 
+                            type="text" 
+                            className="form-control" 
+                            value={ID}
+                            onChange={(event)=>setID(event.target.value)}
+                        />
+                    </div>
                     <div className="mb-3">
                         <label className="form-label">Title</label>
                         <input 
@@ -48,12 +69,21 @@ const ModelAddNewDocs=(props)=>{
 
                     </div>
                     <div className="mb-3">
-                        <label  className="form-label">Job</label>
+                        <label  className="form-label">Author</label>
                         <input 
                             type="text" 
                             className="form-control" 
-                            value={job}
-                            onChange={(event)=>setJob(event.target.value)}
+                            value={author}
+                            onChange={(event)=>setAuthor(event.target.value)}
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label  className="form-label">Location: Number Rack</label>
+                        <input 
+                            type="text" 
+                            className="form-control" 
+                            value={rack}
+                            onChange={(event)=>setRack(event.target.value)}
                         />
                     </div>
                     

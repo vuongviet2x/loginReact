@@ -20,6 +20,16 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
+// const app = createApp(App).mount('#app');
+// app.use(VueSmoothScroll)
+
+// const cors = require("cors");
+// App.use(cors({
+//   origin:"http://localhost:3000",
+//   methods: ["GET","POST","PUT","DELETE"],
+  
+// }))
+
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals

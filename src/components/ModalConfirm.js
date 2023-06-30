@@ -28,13 +28,13 @@ const ModalConfirm=(props)=>{
                 keyboard={false}
                 >
             <Modal.Header closeButton>
-                <Modal.Title>Delete user</Modal.Title>
+                <Modal.Title>Delete Doccumment</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div className='body-add-new'>
                     
                     This action cannot be undone!
-                    You still want to delete this user?
+                    You still want to delete this Doccument?
                     <br/>
                     <b>email = {dataUserDelete.email}</b> 
                     

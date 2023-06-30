@@ -3,7 +3,7 @@ import { Modal, Button} from "react-bootstrap";
 import {postCreateUser} from "../services/UserService";
 import { toast } from 'react-toastify';
 const ModelAddNew=(props)=>{
-    const{show, handleClose,handleUpdateTable}=props;
+    const{show, handleClose, handleUpdateTable}=props;
     const[name,setName]=useState("");
     const[job,setJob]=useState("");
 
@@ -32,13 +32,13 @@ const ModelAddNew=(props)=>{
                 backdrop="static"
                 keyboard={false}>
             <Modal.Header closeButton>
-                <Modal.Title>Add new user</Modal.Title>
+                <Modal.Title>Add a doccument</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div className='body-add-new'>
                     
                     <div className="mb-3">
-                        <label className="form-label">Name</label>
+                        <label className="form-label">Title</label>
                         <input 
                             type="text" 
                             className="form-control" 

@@ -4,7 +4,7 @@ import { loginApi } from "../services/UserService";
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
-
+import cookies from 'react-cookies';
 const Login =()=>{
     const navigate = useNavigate();
     const { loginContext } = useContext(UserContext);
@@ -21,16 +21,29 @@ const Login =()=>{
         }
     },[])
     const handleLogin =async()=>{
+       
         alert("me")
         if(!email||!password){
             toast.error("Email/Password is requirred!");
             return;
         }
         setLoadingAPI(true);
-        let res = await loginApi(email.trim(),password)
-        console.log(">>>Check res: ", res)
-        if (res&& res.token){
-            loginContext(email,res.token)
+        let account = {
+            "username": email,
+            "password": password,
+            "client_id": "mRqMMOQ8EQNATWU4LWgE9t1bVvEKZIsJw7qA7LtJ",
+            "client_secret": "2uUhtVahDG0fciCoQrnrVRzIhJj2z57Ewc4Bvr0Weiwr7rfwLC3VZOoJuakN3z6s4Y96raftdfYgA4fJ9JFakznyBqVGEdhOTMHfPjx37xHIYFx9aXNOar0uGaNQiLjs",
+            "grant_type": "password"
+        }
+        
+        let res = await loginApi(account)
+        // console.log(">>>Check res: ", res)
+        // let accessToken = res.access_token
+        // console.log(">>>token:",accessToken)
+        cookies.save("access_token", res.access_token)
+  
+        if (res&& res.access_token){
+            loginContext(email,res.access_token)
             navigate("/");
 
         }else{
@@ -52,7 +65,7 @@ const Login =()=>{
     return(<>
         <div className="login-container col-12 col-sm-4">
             <div className="title">Log in</div>
-            <div className="text">Email or Username ( eve.holt@reqres.in )</div>
+            <div className="text">Username </div>
             <input 
                 type="text" 
                 placeholder="Email or Username"

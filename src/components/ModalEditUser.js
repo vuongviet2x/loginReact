@@ -6,7 +6,7 @@ const ModalEditUser=(props)=>{
     const{show, handleClose,dataUserEdit, handleEditUserFromModal}=props;
     const[name,setName]=useState("");
     const[job,setJob]=useState("");
-
+    
     const handleEditUser=async()=>{
        let res= await putUpdateUser(name,job)
        if(res && res.updatedAt){
@@ -34,13 +34,13 @@ const ModalEditUser=(props)=>{
                 keyboard={false}
             >
             <Modal.Header closeButton>
-                <Modal.Title>Edit User</Modal.Title>
+                <Modal.Title>Edit Doccument</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div className='body-add-new'>
                     
                     <div className="mb-3">
-                        <label className="form-label">Name</label>
+                        <label className="form-label">Title</label>
                         <input 
                             type="text" 
                             className="form-control" 

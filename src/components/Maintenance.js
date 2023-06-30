@@ -1,7 +1,6 @@
 import Table from 'react-bootstrap/Table';
 import {cloneElement, useEffect, useState} from 'react';
 import ModalConfirmDocs from './ModalConfirmDocs';
-import ModalBorrow from './ModalBorrowDocs';
 import { fetchAllDocs } from '../services/UserService';
 import ReactPaginate from 'react-paginate';
 import ModelAddNewDocs from './ModelAddNewDocs';
@@ -11,19 +10,14 @@ import './TableDocs.scss'
 import { CSVLink } from "react-csv";
 import Papa from "papaparse";
 import { toast } from 'react-toastify';
-import React from 'react'
-import axios from "axios";
 
+const Maintenance = (props)=> {
 
-const TableDocs = (props)=> {
-  var total_pages
   const [listDocs, setListDocs] = useState([]);
   const [totalUsers,setTotalDocs] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [isShowModalBorrow,setIsShowModalBorrow] = useState(false);
-  const [dataDocsBorrow,setDataDocsBorrow] = useState({});
 
-  const [isShowModalAddNew,setIsShowModalAddNew] = useState(false);
+   const [isShowModalAddNew,setIsShowModalAddNew] = useState(false);
   const [isShowModalEdit,setIsShowModalEdit] = useState(false);
   const [dataDocsEdit,setDataDocsEdit] = useState({});
 
@@ -39,7 +33,6 @@ const TableDocs = (props)=> {
     setIsShowModalAddNew(false);
     setIsShowModalEdit(false);
     setIsShowModalDelete(false);
-    setIsShowModalBorrow(false);
   };
   // call apis
   const handleUpdateTable = (docs)=>{
@@ -53,6 +46,7 @@ const TableDocs = (props)=> {
     setListDocs(cloneListDocs);
   }
 
+
   useEffect(() => {
     // eslint-disable-next-line no-undef
       getDocs(1);
@@ -60,39 +54,28 @@ const TableDocs = (props)=> {
 
   const getDocs = async (page)=>{
     let res = await fetchAllDocs(page)
-     console.log(">>>check res: ",res)
-    if (res && res.results){
+    
+    if (res && res.data ){
         console.log(res)
-        setTotalDocs(res.count)
-        setListDocs(res.results)
-        total_pages = Math.ceil(res.count/res.length)
-        setTotalPages(total_pages)
+        setTotalDocs(res.total)
+        setListDocs(res.data)
+        setTotalPages(res.total_pages)
     }
-
+    
   }
-  console.log(listDocs)
-  
+
+
 
   const handlePageClick =(event)=>{
   getDocs(+event.selected +1);
   }
 
   const   handleEditDocs=(docs)=>{
-    setDataDocsEdit(docs);
+     setDataDocsEdit(docs);
     setIsShowModalEdit(true);
+
     
   }
-  const   handleBorrowDocs=(docs)=>{
-    setDataDocsBorrow(docs);
-   setIsShowModalBorrow(true);
-
-   
- }
- const handleBorrowDocsFromModal = (docs)=>{
-  let cloneListDocs = _.cloneDeep(listDocs);
-  cloneListDocs = cloneListDocs.filter(item => item.id !== docs.id)
-  setListDocs(cloneListDocs);
-}
   const handleDeleteDocs = (docs)=>{
     setIsShowModalDelete(true);
     setDataDocsDelete(docs);
@@ -115,9 +98,8 @@ const TableDocs = (props)=> {
       if (term){
         
         let cloneListDocs = _.cloneDeep(listDocs);
-        cloneListDocs = cloneListDocs.filter(item =>item.name.includes(term))
+        cloneListDocs = cloneListDocs.filter(item =>item.email.includes(term))
         setListDocs(cloneListDocs)
-        // console.log(">>Docs:",listDocs)
       }
       else{
         getDocs(1);
@@ -128,111 +110,107 @@ const TableDocs = (props)=> {
     const getDocsExport = (event,done)=>{
       let result = [];
       if (listDocs && listDocs.length > 0){
-        result.push(["Id","Title","Author","Created at","Location: Number rack"]);
+        result.push(["Id","Action","Created at"]);
         listDocs.map((item,index) => {
           let arr = [];
           arr[0]=item.id;
-          arr[1]=item.name;
-          arr[2]=item.author;
-          arr[3]=item.created_at;
-          arr[4]=item.rack_id_Document;
+          arr[1]=item.action;
+          arr[2]=item.createdAt;
           result.push(arr)
         })
         setDataExport(result);
         done();
       }
     }
-    const handleImportCSV = (event)=>{
-      if (event.target && event.target.files && event.target.files[0]){
-          let file = event.target.files[0];
-          if (file.type !== "text/csv"){
-            toast.error("Only accept csv files...")
-            return;
-          }
-          // Parse local CSV file
-          Papa.parse(file, {
-            //header: true,
-            complete: function(results) {
-              let rawCSV = results.data;
-              if (rawCSV.length>0){
-                if(rawCSV[0]&& rawCSV[0].length ===5){
-                    if(rawCSV[0][0] !== "Id"
-                    ||rawCSV[0][1]!== "Title"
-                    ||rawCSV[0][2]!== "Author"
-                    ||rawCSV[0][3]!== "Created At"
-                    ||rawCSV[0][4]!=="Location"){
-                      toast.error("Wrong format Header's CSV file!")
-                    }else{
-                      let result=[];
-                      console.log(rawCSV)
-                      rawCSV.map((item,index)=>{
-                        if(index>0 && item.length ===4){
-                          let obj={};
-                          obj.id = item[0]
-                          obj.name=item[1];
-                          obj.author=item[2];
-                          obj.created_at=item[3];
-                          obj.rack_id_Document=item[4];
-                          result.push(obj);
+//     const handleImportCSV = (event)=>{
+//       if (event.target && event.target.files && event.target.files[0]){
+//           let file = event.target.files[0];
+//           if (file.type !== "text/csv"){
+//             toast.error("Only accept csv files...")
+//             return;
+//           }
+//           // Parse local CSV file
+//           Papa.parse(file, {
+//             //header: true,
+//             complete: function(results) {
+//               let rawCSV = results.data;
+//               if (rawCSV.length>0){
+//                 if(rawCSV[0]&& rawCSV[0].length ===3){
+//                     if(rawCSV[0][0] !== "Id"
+//                     ||rawCSV[0][1]!== "Action"
+//                     ||rawCSV[0][2]!== "Created At"
+//                     ){
+//                       toast.error("Wrong format Header's CSV file!")
+//                     }else{
+//                       let result=[];
+//                       console.log(rawCSV)
+//                       rawCSV.map((item,index)=>{
+//                         if(index>0 && item.length ===3){
+//                           let obj={};
+//                           obj.id = item[0]
+//                           obj.title=item[1];
+//                           obj.createdAt=item[2];
+                          
+//                           result.push(obj);
 
-                        }
-                      })
-                      setListDocs(result)
-                      console.log(">>>check result: ",result)
-                    }
+//                         }
+//                       })
+//                       setListDocs(result)
+//                       console.log(">>>check result: ",result)
+//                     }
 
-                }else{
-                  toast.error("Wrong format CSV file!")
-                }
+//                 }else{
+//                   toast.error("Wrong format CSV file!")
+//                 }
 
-              }else
-              toast.error("Not found data on CSV file!")
-              console.log("Finished:", results.data);
-              }
-          });
-      }
+//               }else
+//               toast.error("Not found data on CSV file!")
+//               console.log("Finished:", results.data);
+//               }
+//           });
+//       }
       
 
 
-    }
+//     }
   return (<>
 
     <div className="my-3 add-new d-sm-flex">
 
-            <span><b>List Documments:</b> </span>
+            <span><b>Maintenance schedule:</b> </span>
             <div className='group-btns mt-sm-0 mt-2'>
-              <label htmlFor="test" className='btn btn-warning'><i className="fa-solid fa-file-import"></i> Import</label>
-              <input id="test" type='file'hidden
-              onChange={(event)=>handleImportCSV(event)}
-
-              />
+              {/* <label htmlFor="test" className='btn btn-warning'><i className="fa-solid fa-file-import"></i> Import</label> */}
+              {/* <input id="test" type='file'hidden
+              onChange={(event)=>handleImportCSV(event)} */}
+{/* 
+              /> */}
               <CSVLink 
                 data={dataExport}
                 asyncOnClick={true}
                 onClick={getDocsExport}
-                filename={"documents.csv"}
+                filename={"users.csv"}
                 className="btn btn-primary"
                 target="_blank">
               <i className="fa-solid fa-file-arrow-down"></i> Export</CSVLink>
-              <button className='btn btn-success' 
+              {/* <button className='btn btn-success' 
                   onClick={()=> setIsShowModalAddNew(true)}>
                   <i className="fa-solid fa-circle-plus"></i>
                     Add new 
-              </button>
+              </button> */}
             </div>
             
     </div>
 
       {/* search  */}
 
-    <div className='col-12 col-sm-4 my-3'> 
+    {/* <div className='col-12 col-sm-4 my-3'> 
       <input 
       className='form-control' 
       placeholder='search docs by Title...'
       //value={keyWord}
       onChange={(event)=>handleSearch(event)}
       />
-    </div>
+    </div> */}
     <div className='customize-table'>
         <Table striped bordered hover >
               <thead>
@@ -255,53 +233,47 @@ const TableDocs = (props)=> {
                     
                   
                   </th>
-                  <th >Title</th>
+                  
                   <th >
                     <div className='sort-header'>
                         {/* //first_name */}
-                      <span>Author</span> 
-                      
-                    </div>
-                    </th>
-                  <th >Created at</th>
-                  <th>
-                    <div className='sort-header'>
-                      <span> Location: Number Rack</span>
+                      <span>Action</span> 
                       <span>
                               <i 
                                   className="fa-solid fa-arrow-down-long"
-                                  onClick={()=>handleSort("desc","rack_id_Document") }
+                                  onClick={()=>handleSort("desc","first_name") }
                               ></i>
                               <i 
                                   className="fa-solid fa-arrow-up-long"
-                                  onClick={()=>handleSort("asc","rack_id_Document")}
+                                  onClick={()=>handleSort("asc","first_name")}
                               ></i>
                             </span>
                     </div>
-                   </th>
-                  <th >Actions</th>
+                    </th>
+                    <th >Date created</th>
+                  {/* <th >Created at</th>
+                  <th>Location</th>
+                  <th >Actions</th> */}
                 </tr>
               </thead>
               <tbody>
                 {listDocs && listDocs.length>0 && listDocs.map((item,index)=>{
-               
                   return (
                     <tr key={`docs-${index}`}>
-                      {/*  <tr key={`docs`}> */}
                   <td>{item.id}</td>
-                  <td>{item.name}</td>
-                  <td>{item.author}</td>
-                  <td>{item.created_at}</td>
-                  <td>{item.rack_id_Document}</td>
+                  <td>{item.action}</td>
+                  <td>{item.createdAt}</td>
+                  {/* <td>{item.createdAt}</td>
+                  <td>{item.location}</td>
                   <td>
-                    <button className='btn btn-success mx-6' onClick={()=>handleBorrowDocs(item)}>Borrow</button>
+                    <button className='btn btn-success mx-6'>Borrow</button>
                     <button className='btn btn-warning mx-3'
                     onClick={()=>handleEditDocs(item)}>Edit</button>
                     <button 
                     onClick={()=>handleDeleteDocs(item)}
                     className='btn btn-danger'
                     >Delete</button>
-                  </td>
+                  </td> */}
                 </tr>
                   )
                 })}
@@ -317,7 +289,7 @@ const TableDocs = (props)=> {
         nextLabel="next >"
         onPageChange={handlePageClick}
         pageRangeDisplayed={10}
-        pageCount={10}
+        pageCount={totalPages}
         previousLabel="< previous"
         pageClassName='page-item'
         pageLinkClassName='page-link'
@@ -349,14 +321,8 @@ const TableDocs = (props)=> {
         dataDocsDelete={dataDocsDelete}
         handleDeleteDocsFromModal={handleDeleteDocsFromModal}
       />
-      <ModalBorrow
-        show={isShowModalBorrow}
-        handleClose ={handleClose}
-        dataDocsBorrow={dataDocsBorrow}
-        handleBorrowDocsFromModal={handleBorrowDocsFromModal}
-      />
     </>
   );
 }
 
-export default TableDocs
+export default Maintenance

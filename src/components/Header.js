@@ -38,7 +38,7 @@ const Header = (props)=>{
               className="d-inline-block align-top"
               alt="React Bootstrap logo"
             />
-              Smart Inventory System
+              Group 01
               
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -48,8 +48,10 @@ const Header = (props)=>{
                 <Nav className="me-auto">
                   
                     <NavLink to="/" className="nav-link">Home</NavLink>
-                     <NavLink to="/users" className="nav-link">Manage users</NavLink>
-                     <NavLink to='/docs' className="nav-link">Manage documments</NavLink>
+                     <NavLink to="/docs" className="nav-link">Documents</NavLink>
+                     <NavLink to='/history' className="nav-link">History</NavLink>
+                     <NavLink to='/maintenance' className="nav-link">Maintenance</NavLink>
+                     <NavLink to='/control' className="nav-link">Control</NavLink>
                   </Nav>  
                 <Nav>
                     {user && user.email && <span className='nav-link'>Welcome {user.email} </span>}

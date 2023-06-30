@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const instance = axios.create({
-    baseURL: 'https://reqres.in'
+    // baseURL: 'https://reqres.in'
+    baseURL:'http://127.0.0.1:8000'
   });
   
 // Add a response interceptor
@@ -35,3 +36,6 @@ instance.interceptors.response.use(function (response) {
  // return Promise.reject(error);
 });
 export default instance;
+// export let enpoints = {
+//   'account': '/account',
+// }
