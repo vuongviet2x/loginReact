@@ -1,7 +1,7 @@
 import Table from 'react-bootstrap/Table';
 import {cloneElement, useEffect, useState} from 'react';
 import ModalConfirmDocs from './ModalConfirmDocs';
-import { fetchAllDocs } from '../services/UserService';
+import { fetchHistory} from '../services/UserService';
 import ReactPaginate from 'react-paginate';
 import ModelAddNewDocs from './ModelAddNewDocs';
 import ModalEditDocs from './ModalEditDocs';
@@ -53,7 +53,7 @@ const History = (props)=> {
               },[] )
 
   const getDocs = async (page)=>{
-    let res = await fetchAllDocs(page)
+    let res = await fetchHistory(page)
     
     if (res && res.data ){
         console.log(res)
@@ -70,16 +70,6 @@ const History = (props)=> {
   getDocs(+event.selected +1);
   }
 
-  const   handleEditDocs=(docs)=>{
-     setDataDocsEdit(docs);
-    setIsShowModalEdit(true);
-
-    
-  }
-  const handleDeleteDocs = (docs)=>{
-    setIsShowModalDelete(true);
-    setDataDocsDelete(docs);
-  }
   const handleDeleteDocsFromModal = (docs)=>{
     let cloneListDocs = _.cloneDeep(listDocs);
     cloneListDocs = cloneListDocs.filter(item => item.id !== docs.id)
@@ -113,7 +103,7 @@ const History = (props)=> {
         result.push(["Id","Action","Created at"]);
         listDocs.map((item,index) => {
           let arr = [];
-          arr[0]=item.id;
+          arr[0]=index;
           arr[1]=item.action;
           arr[2]=item.createdAt;
           result.push(arr)

@@ -4,23 +4,32 @@ import { deleteDocs } from "../services/UserService";
 import { toast } from "react-toastify";
 const ModalConfirmDocs=(props)=>{
 
-    const{show, handleClose,dataDocsDelete,handleDeleteDocsFromModal}=props;
+    const{show, handleClose,dataDocsDelete,handleDeleteDocsFromModal,isEqualId,idDocHandle}=props;
 
     const confirmDelete = async() => {
-        let res = await deleteDocs(dataDocsDelete.id)
-        if (res && +res.statusCode === 204){
-            toast.success("Delete user succeed!")
+
+        var today = new Date();
+        var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        let updateTime = date+'T'+time+'Z'
+
+        let updateDocs ={id:dataDocsDelete.id ,name:dataDocsDelete.name, active: 'false',author:dataDocsDelete.author,created_at:dataDocsDelete.created_at,group_rack_id: dataDocsDelete.group_rack_id, rack_id_Document:dataDocsDelete.rack_id_Document}
+        let res = await deleteDocs(dataDocsDelete.id, updateDocs)
+        console.log(">>> Check res uninstall",res)
+        if (res ){
+            toast.success("Unactive succeed!")
             handleClose();
             handleDeleteDocsFromModal(dataDocsDelete)
         }else{
-            toast.error("Error delete user!")
+            toast.error("Error unactive succeed!")
         }
 
     }
+    console.log(">>> Data delete===",dataDocsDelete)
 
 
-    return(
-        <>
+    return(<div>
+            {isEqualId === 1 ?( <>
             <Modal 
                 show={show} 
                 onHide={handleClose}
@@ -28,7 +37,7 @@ const ModalConfirmDocs=(props)=>{
                 keyboard={false}
                 >
             <Modal.Header closeButton>
-                <Modal.Title>Delete doccument</Modal.Title>
+                <Modal.Title>Unactive doccument</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div className='body-add-new'>
@@ -36,7 +45,7 @@ const ModalConfirmDocs=(props)=>{
                     This action cannot be undone!
                     You still want to delete this Documment?
                     <br/>
-                    <b>email = {dataDocsDelete.email}</b> 
+                    <b>{dataDocsDelete.email}</b> 
                     
                 
                 </div>
@@ -50,7 +59,40 @@ const ModalConfirmDocs=(props)=>{
                 </Button>
             </Modal.Footer>
         </Modal>
-        </>
+        </>):(<>
+                    <Modal 
+                        show={show} 
+                        onHide={handleClose}
+                        backdrop="static"
+                        keyboard={false}
+                    >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Unactive Documment</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className='body-add-new'>
+                            <div className="mb-3">
+                                <label className="form-label">This document is is located at Group rack number {idDocHandle}. 
+                                Please move to this group rack to unactive the document.</label>
+                                
+                            </div>
+                        
+                    
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Close
+                        </Button>
+                    {/* <Button variant="primary" onClick={()=>handleEditDocs()}>
+                        Confirm
+                    </Button> */}
+                    </Modal.Footer>
+                    </Modal>
+                </>)}
+    </div>
+
+       
     )
 }
 

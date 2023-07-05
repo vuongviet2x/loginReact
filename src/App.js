@@ -18,10 +18,12 @@ function App() {
 
   return (
   <>
+  
+    
     <div className='app-container'> 
     <Header/>
     <Container>
-      <AppRoutes/>       
+      <AppRoutes userRack ={user}/>       
     </Container>
       
     </div>

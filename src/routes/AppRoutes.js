@@ -58,7 +58,8 @@ import NotFound from "./NotFound";
 //         }
 
 //     )
-const AppRoutes =()=>{
+const AppRoutes =(props)=>{
+    console.log(">>>appRoutes:",props.userRack.email)
     return(
         <>
             <Routes>
@@ -80,7 +81,7 @@ const AppRoutes =()=>{
                 path="/docs"
                 element={
                     <PrivateRoute path2="/docs">
-                    <TableDocs/>
+                    <TableDocs user={props.userRack.email}/>
                     </PrivateRoute>
                 }
             />
@@ -96,7 +97,7 @@ const AppRoutes =()=>{
                 path="/control"
                 element={
                     <PrivateRoute path4="/control">
-                    <Control/>
+                    <Control user={props.userRack.email}/>
                     </PrivateRoute>
                 }
             />

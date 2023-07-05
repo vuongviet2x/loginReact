@@ -1,27 +1,35 @@
 
 import { Modal, Button} from "react-bootstrap";
-import { borrowUser,control } from "../services/UserService";
+import { borrowUser,control,history } from "../services/UserService";
 import { toast } from "react-toastify";
 const ModalBorrow=(props)=>{
 
-    const{show, handleClose,dataDocsBorrow,handleBorrowDocsFromModal}=props;
+    const{show, handleClose,dataDocsBorrow,handleBorrowDocsFromModal,isEqualId,idDocHandle}=props;
 
     const confirmBorrow = async() => {
+        var today = new Date();
+        var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        let borrowTime = date+'T'+time+'Z'
+        var date2 = today.getFullYear()+'-'+(today.getMonth()+3)+'-'+today.getDate();
+        let borrowTime2 = date2+'T'+time+'Z'
         let borrow_info = {
-            "name": 
-                dataDocsBorrow.name
+            "document_id": 
+                dataDocsBorrow.id
             ,
-            "author": 
-                dataDocsBorrow.author
+            "date_borrowed": 
+                borrowTime
             ,
-            "created_at": 
-                dataDocsBorrow.created_at
+            "date_returned": 
+            borrowTime2
             ,
-            "rack_id_Document": 
-                dataDocsBorrow.rack_id_Document
-            ,
-            "active": 
-                "false"
+            // " ":dataDocsBorrow.group_rack_id
+            // ,
+            // "rack_id_Document": 
+            //     dataDocsBorrow.rack_id_Document
+            // ,
+            // "active": 
+            //     "false"
             
         }
         let res = await borrowUser(dataDocsBorrow.id,borrow_info)
@@ -32,22 +40,24 @@ const ModalBorrow=(props)=>{
             "guide_light": 0,
             "group_id": 1
         }
-            console.log(">>>check item:", dataDocsBorrow.rack_id_Document)
+        const dataHistory = {"action": 'Tài liệu :'+dataDocsBorrow.name+' có ID là: '+dataDocsBorrow.id+' ở tủ '+dataDocsBorrow.rack_id_Document+' được mượn.',"created_at":borrowTime}
+        console.log(">>>check item:", dataDocsBorrow.rack_id_Document)
         control(data)
         console.log(">>>res.statusCode ",res)
-        if (res && res.active === false){
+        if (res && res.document_id ){
             toast.success("Borrow document succeed!")
             handleClose();
             handleBorrowDocsFromModal(dataDocsBorrow)
+            let resHistory = await history(dataHistory)
         }else{
             toast.error("Error borrow document!")
         }
         
     }
-
-
-    return(
-        <>
+    
+    console.log(">>> isEqualID Borrow=", isEqualId)
+    return(<div>
+        {isEqualId === 1 ?( <>
             <Modal 
                 show={show} 
                 onHide={handleClose}
@@ -76,7 +86,41 @@ const ModalBorrow=(props)=>{
                 </Button>
             </Modal.Footer>
         </Modal>
-        </>
+        </>)
+        :
+        (<>
+            <Modal 
+                show={show} 
+                onHide={handleClose}
+                backdrop="static"
+                keyboard={false}
+            >
+            <Modal.Header closeButton>
+                <Modal.Title>Borrow Doccumment</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <div className='body-add-new'>
+                    <div className="mb-3">
+                        <label className="form-label">This document is located at Group rack number {idDocHandle}. 
+                        Please move to this group rack to borrow the document.</label>
+                        
+                    </div>
+                
+            
+                </div>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                    Close
+                </Button>
+            {/* <Button variant="primary" onClick={()=>handleEditDocs()}>
+                Confirm
+            </Button> */}
+            </Modal.Footer>
+            </Modal>
+        </>)}
+    </div>
+       
     )
 }
 

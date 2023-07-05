@@ -28,15 +28,15 @@ const ModalConfirm=(props)=>{
                 keyboard={false}
                 >
             <Modal.Header closeButton>
-                <Modal.Title>Delete Doccumment</Modal.Title>
+                <Modal.Title>Unactive Doccumment</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div className='body-add-new'>
                     
-                    This action cannot be undone!
-                    You still want to delete this Doccument?
+                    
+                    You still want to unactive this Doccument?
                     <br/>
-                    <b>email = {dataUserDelete.email}</b> 
+                    <b> {dataUserDelete.email}</b> 
                     
                 
                 </div>

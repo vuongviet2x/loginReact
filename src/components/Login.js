@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import cookies from 'react-cookies';
+import TableDocs from './TableDocs'
 const Login =()=>{
     const navigate = useNavigate();
     const { loginContext } = useContext(UserContext);
@@ -35,8 +36,9 @@ const Login =()=>{
             "client_secret": "2uUhtVahDG0fciCoQrnrVRzIhJj2z57Ewc4Bvr0Weiwr7rfwLC3VZOoJuakN3z6s4Y96raftdfYgA4fJ9JFakznyBqVGEdhOTMHfPjx37xHIYFx9aXNOar0uGaNQiLjs",
             "grant_type": "password"
         }
-        
         let res = await loginApi(account)
+        
+
         // console.log(">>>Check res: ", res)
         // let accessToken = res.access_token
         // console.log(">>>token:",accessToken)
@@ -53,6 +55,8 @@ const Login =()=>{
             }
         }
         setLoadingAPI(false);
+
+        
     }
     const handleGoBack = ()=>{
         navigate("/") 
@@ -97,12 +101,13 @@ const Login =()=>{
                 <span onClick={()=>handleGoBack()}>&nbsp;Go back</span>
             </div>
         </div>
-
+      
 
 
 
 
 
     </>)
+   
 }
 export default Login

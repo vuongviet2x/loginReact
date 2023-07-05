@@ -7,10 +7,10 @@ import { useLocation, NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../context/UserContext';
+import TableDocs from './TableDocs';
 
 const Header = (props)=>{
 
-    
     const { logout,user } = useContext(UserContext);
     const [hideHeader,setHideHeader]=useState(false);
     // useEffect(()=>{
@@ -18,14 +18,13 @@ const Header = (props)=>{
     //       setHideHeader(true);
     //     }
     // },[])
+    // console.log(">>> header user:", user.email)
     const navigate=useNavigate();
-    
     const handleLogout = () => {
         logout();
         navigate("/");
         toast.success("Log out success!")
     }
-  
     const location =useLocation();
     return (
         <Navbar bg="light" expand="lg" >
@@ -38,7 +37,7 @@ const Header = (props)=>{
               className="d-inline-block align-top"
               alt="React Bootstrap logo"
             />
-              Group 01
+              Inventory System
               
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -61,17 +60,17 @@ const Header = (props)=>{
                       :<NavLink to="/login" className="dropdown-item">Login</NavLink>
                       }
                     
-                    
+                
                     
                   </NavDropdown>
                 </Nav>
               </>
               
               }
-              
             </Navbar.Collapse>
           </Container>
         </Navbar>
+        
       );
 
 }
