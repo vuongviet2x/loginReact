@@ -2,7 +2,7 @@ import Table from 'react-bootstrap/Table';
 import {cloneElement, useEffect, useState} from 'react';
 import ModalConfirmDocs from './ModalConfirmDocs';
 import ModalBorrow from './ModalBorrowDocs';
-import { fetchAllDocs, fetchAllUser, borrowDocs } from '../services/UserService';
+import { fetchAllDocs, fetchAllUser, borrowDocs ,fetchDocsRackGroup} from '../services/UserService';
 import ReactPaginate from 'react-paginate';
 import ModelAddNewDocs from './ModelAddNewDocs';
 import ModalEditDocs from './ModalEditDocs';
@@ -66,12 +66,69 @@ const TableDocs = (props)=> {
   // console.log(">>>Print ai di cua tu=",idDocHandle)
   useEffect(() => {
     // eslint-disable-next-line no-undef
-      getDocs(1); getUsers();getBorrow(1)
+      getDocs(1); getUsers();getBorrow(1);getDocsRack();
               },[] )
+              const getUsers = async(numberPageUser)=>{
+                if (numberPageUser !== 0) {
+                  let response = await fetchAllUser(numberPageUser)
+                let resUser = await response
+                return resUser;
+                }
+                
+                
+              }
+             console.log(">>List resUser = ",getUsers())
+              
+            useEffect(()=>{getUsers(numberPageUser).then(resUser=> {
+                resUser.results.map((item,index) => {
+                if (item.username === props.user)
+                  {let idUserRack = item.id - 5
+                    setIdUserRack(idUserRack)
+                  }
+                 if (props.user === 'vuongvi')
+                 {let userAddNew=1
+                  setUserAddNew(userAddNew)}
+                if (props.user !== 'vuongvi')
+                {let userAddNew=0
+                    setUserAddNew(userAddNew)}
+                  
+                 
+              },_); 
+              } )}) 
+             
+            useEffect(()=>{
+              
+            }) 
+              async function getDocsRack(idUserRack) {
+                console.log('calling');
+                const resultDocs = await fetchDocsRackGroup(idUserRack);
+                console.log(">>>Check Table Docs:",resultDocs);
+                // Expected output: "resolved"
+                return resultDocs
+              }
+            
+            //const data9 = getDocsRack(idUserRack).then (data => {console.log(">>> 9 thanh phan",data)})
 
+            //console.log(">>>data9",data9)
+             
+           // console.log(">>>>resultDocs 9 thanh phan please",resultDocs) 
+  // const getDocsRack = async (idUserRack) =>{
+  //   if (idUserRack>0){
+  //     let ress = await fetchDocsRackGroup(idUserRack)
+  //     console.log("List Docs Racks::^^^",ress)
+  //   }
+  // }
+              
+              
+              
+              
+  //console.log(">>>idUserRack:::::",idUserRack)
+             // console.log(">>>resultsDoccs:::::",resultDocs)
   const getDocs = async (page)=>{
-    let res = await fetchAllDocs(page)
-      console.log(">>>check res: ",res)
+    if (props.user === 'vuongvi')
+    {
+      let res = await fetchAllDocs(page)
+      console.log(">>>check res20033333: ",res)
     if (res && res.results){
         console.log(res)
         setTotalDocs(res.count)
@@ -79,10 +136,21 @@ const TableDocs = (props)=> {
         total_pages = Math.ceil(res.count/res.length)
         setTotalPages(total_pages)
     }
-
+}
+// else{ setListDocs(resultDocs)}
+  if (props.user !== 'vuongvi')
+  {getDocsRack(idUserRack).then (data => {
+    console.log(">>> 9 thanh phan",data)
+    setListDocs(data)
+    total_pages = Math.ceil(data.length/6)
+    setTotalPages(total_pages)
+    setTotalDocs(6)
+})
+console.log(">>>1112312123",listDocs)}
+    
   }
-  console.log("ListDOcs:",listDocs)
-  console.log(">>> props:",props.user)
+  //console.log("ListDOcs:::::::",listDocs)
+  //console.log(">>> props:",props.user)
 
   const getBorrow = async(page)=>{
     let response = await borrowDocs(page)
@@ -113,41 +181,49 @@ const TableDocs = (props)=> {
 
 
    //console.log(">>List resborrow = ",resborrow)
-  const getUsers = async(numberPageUser)=>{
-    if (numberPageUser !== 0) {
-      let response = await fetchAllUser(numberPageUser)
-    let resUser = await response
-    return resUser;
-    }
+//   const getUsers = async(numberPageUser)=>{
+//     if (numberPageUser !== 0) {
+//       let response = await fetchAllUser(numberPageUser)
+//     let resUser = await response
+//     return resUser;
+//     }
     
     
-  }
- console.log(">>List resUser = ",getUsers())
+//   }
+//  console.log(">>List resUser = ",getUsers())
   
-useEffect(()=>{getUsers(numberPageUser).then(resUser=> {
-    resUser.results.map((item,index) => {
-    if (item.username === props.user)
-      {let idUserRack = item.id - 5
-        setIdUserRack(idUserRack)
-      }
-     if (props.user === 'vuongvi')
-     {let userAddNew=1
-      setUserAddNew(userAddNew)}
-    if (props.user !== 'vuongvi')
-    {let userAddNew=0
-        setUserAddNew(userAddNew)}
+// useEffect(()=>{getUsers(numberPageUser).then(resUser=> {
+//     resUser.results.map((item,index) => {
+//     if (item.username === props.user)
+//       {let idUserRack = item.id - 5
+//         setIdUserRack(idUserRack)
+//       }
+//      if (props.user === 'vuongvi')
+//      {let userAddNew=1
+//       setUserAddNew(userAddNew)}
+//     if (props.user !== 'vuongvi')
+//     {let userAddNew=0
+//         setUserAddNew(userAddNew)}
       
      
-  },_); 
-  } )}) 
+//   },_); 
+//   } )}) 
  
   
+//   async function getDocsRack(idUserRack) {
+//     console.log('calling');
+//     const resultDocs = await fetchDocsRackGroup(idUserRack);
+//     console.log(">>>Check Table Docs:",resultDocs);
+//     // Expected output: "resolved"
+//     return resultDocs
+//   }
+
+// const resultDocs= getDocsRack(idUserRack)
   
   
   
   
-  
-  console.log(">>>idUserRack:::::",idUserRack)
+//   console.log(">>>idUserRack:::::",idUserRack)
   // console.log(">>>Check idUserRacks=",getUsers().then())
 
   // const getUsers = async() => {
@@ -342,10 +418,12 @@ useEffect(()=>{getUsers(numberPageUser).then(resUser=> {
             <span><b>List Documments:</b> </span>
             <div className='group-btns mt-sm-0 mt-2'>
               <label htmlFor="test" className='btn btn-warning'><i className="fa-solid fa-file-import"></i> Import</label>
+              { props.user==='vuongvi'?
               <input id="test" type='file'hidden
-              onChange={(event)=>handleImportCSV(event)}
-
-              />
+              onChange={(event)=>handleImportCSV(event)}/>
+              :<></>
+              }
+              
               <CSVLink 
                 data={dataExport}
                 asyncOnClick={true}

@@ -42,8 +42,8 @@ const ModalConfirmDocs=(props)=>{
             <Modal.Body>
                 <div className='body-add-new'>
                     
-                    This action cannot be undone!
-                    You still want to delete this Documment?
+                
+                    You still want to unactive Documment?
                     <br/>
                     <b>{dataDocsDelete.email}</b> 
                     

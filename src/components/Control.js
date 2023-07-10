@@ -1,7 +1,7 @@
 import Table from 'react-bootstrap/Table';
 import {cloneElement, useEffect, useState} from 'react';
 import ModalConfirmDocs from './ModalConfirmDocs';
-import { control ,fetchAllUser} from '../services/UserService';
+import { control ,fetchAllUser,history} from '../services/UserService';
 import ReactPaginate from 'react-paginate';
 import ModelAddNewDocs from './ModelAddNewDocs';
 import ModalEditDocs from './ModalEditDocs';
@@ -36,6 +36,10 @@ const Control = (props)=> {
   const [dataDocsLightOn,setDataDocsLightOn]=useState({});
   const [isShowModalLightOff,setIsShowLightOff] = useState(false);
   const [dataDocsLightOff,setDataDocsLightOff]=useState({});
+  var today = new Date();
+        var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        let operationTime = date+'T'+time+'Z'
   const handleClose= ()=>{
     setIsShowModalAddNew(false);
     setIsShowModalEdit(false);
@@ -106,7 +110,9 @@ console.log(">>>Id User Control===",idUserControl)
     "guide_light": 0,
     "group_id": 1
   }
-    console.log(">>>check item:", item)
+    const dataHistory ={'action': 'Tủ số  '+ item + ' dịch sang trái!',"created_at":operationTime}
+    let res =  history(dataHistory)
+    console.log(">>>check item dataHistory:", res)
     control(data)
     toast.success('Tủ số '+ item + 'dịch sang trái!');
   }
@@ -118,18 +124,23 @@ console.log(">>>Id User Control===",idUserControl)
     "guide_light": 0,
     "group_id": 1
   }
+  const dataHistory ={'action': 'Tủ số  '+ item + ' dịch sang phải!',"created_at":operationTime}
+    let res =  history(dataHistory)
     console.log(">>>check item:", item)
     control(data)
     toast.success('Tủ số '+ item + 'dịch sang phải!');
   }
   const handleHome = (item)=>{
-    const data ={"rack_id_Operation": item,
+    const id_group_rack = Math.floor(item /5)+1
+    const data ={"rack_id_Operation": id_group_rack,
     "open_specific_rack": 0,
     "handlemoving": 3,
     "ventilate": false,
     "guide_light": 0,
     "group_id": 1
   }
+  const dataHistory ={'action': 'Tủ số  '+ item + ' về home!',"created_at":operationTime}
+    let res =  history(dataHistory)
   control(data)
   toast.success('Tủ số '+ item + 'về vị trí ban đầu!');}
   const handleLightOn = (item)=>{
@@ -140,6 +151,8 @@ console.log(">>>Id User Control===",idUserControl)
     "guide_light": 1,
     "group_id": 1
   }
+  const dataHistory ={'action': 'Đèn của tủ số  '+ item + ' đã bật!',"created_at":operationTime}
+    let res =  history(dataHistory)
   control(data)
   toast.success('Đèn của tủ số '+ item + 'bật!');
 }
@@ -151,28 +164,39 @@ console.log(">>>Id User Control===",idUserControl)
     "guide_light": 2,
     "group_id": 1
   }
+  const dataHistory ={'action': 'Đèn của tủ số  '+ item + ' đã tắt!',"created_at":operationTime}
+  let res =  history(dataHistory)
   control(data)
   toast.success('Đèn của tủ số '+ item + 'tắt!');
   }
   const handleHongKhoStart = (item)=>{
-    const data ={"rack_id_Operation": item,
+    //var item_group_rack = Math.floor(item/5) +1
+    console.log("?????",item)
+    const data ={"rack_id_Operation": 1,
     "open_specific_rack": 0,
     "handlemoving": 0,
     "ventilate": true,
     "guide_light": 0,
-    "group_id": 1
+    "group_id": item,
   }
+  const dataHistory ={'action': 'Nhóm tủ số   '+ item + ' kích hoạt hong khô!',"created_at":operationTime}
+  let res =  history(dataHistory)
   control(data)
   toast.success('Bật chế độ hong khô!');
   }
   const handleHongKhoStop = (item)=>{
-    const data ={"rack_id_Operation": item,
+
+    //let item_group_rack = Math.floor(item/5) +1
+   // console.log(">>check item group rack===",item_group_rack)
+    const data ={"rack_id_Operation": 1,
     "open_specific_rack": 0,
     "handlemoving": 0,
     "ventilate": false,
     "guide_light": 0,
-    "group_id": 1
+    "group_id": item
   }
+  const dataHistory ={'action': 'Nhóm tủ số   '+ item + '  dừng kích hoạt hong khô!',"created_at":operationTime}
+  let res =  history(dataHistory)
   control(data)
   toast.success('Chế độ hong khô dừng!');
   }
@@ -261,11 +285,11 @@ console.log(">>>Id User Control===",idUserControl)
         <span><b>Hong Kho Mode</b> </span>
         <div>
           <button 
-                      onClick={()=>handleHongKhoStart()}
+                      onClick={()=>handleHongKhoStart(idUserControl)}
                       className='btn btn-success mx-3' 
                       >Start</button>
           <button
-                    onClick={()=>handleHongKhoStop()}
+                    onClick={()=>handleHongKhoStop(idUserControl)}
                     className='btn btn-danger mx-3' 
                     >Stop</button>
                      
@@ -347,11 +371,11 @@ console.log(">>>Id User Control===",idUserControl)
         <span><b>Hong Kho Mode</b> </span>
         <div>
           <button 
-                      onClick={()=>handleHongKhoStart()}
+                      onClick={()=>handleHongKhoStart(idUserControl)}
                       className='btn btn-success mx-3' 
                       >Start</button>
           <button
-                    onClick={()=>handleHongKhoStop()}
+                    onClick={()=>handleHongKhoStop(idUserControl)}
                     className='btn btn-danger mx-3' 
                     >Stop</button>
                      

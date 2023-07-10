@@ -13,6 +13,18 @@ const fetchAllDocs = (page)=>{
     // return axios.get(`/document/`);
 
 }
+const fetchDocsRackGroup = (id)=>{
+    return axios.get(`/document_rack_group/${id}`)
+    // try {
+    //     const res = axios.get(
+    //         `/document_rack_group/${id}`
+    //     );
+    //     return res;
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+}
+
 const postCreateUser =(name,job)=>{
     return axios.post("/api/users",{name,job})
 }
@@ -58,7 +70,7 @@ const fetchHistory = (page)=>{
         // return axios.get(`/document/`);
     
     }
-export {fetchAllUser,postCreateUser,putUpdateUser,deleteUser,loginApi,fetchAllDocs,postCreateDocs,putUpdateDocs,deleteDocs,borrowUser,control,borrowDocs,history,fetchHistory};
+export {fetchAllUser,postCreateUser,putUpdateUser,deleteUser,loginApi,fetchAllDocs,postCreateDocs,putUpdateDocs,deleteDocs,borrowUser,control,borrowDocs,history,fetchHistory,fetchDocsRackGroup};
 export let authAPI = axios.create({
     headers: {
         'Authorization':`Bearer ${cookies.load('access_token')}`

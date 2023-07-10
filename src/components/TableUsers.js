@@ -54,27 +54,30 @@ const History = (props)=> {
 
   const getDocs = async (page)=>{
     let res = await fetchHistory(page)
-    
-    if (res && res.data ){
-        console.log(res)
-        setTotalDocs(res.total)
-        setListDocs(res.data)
-        setTotalPages(res.total_pages)
+    //console.log(">>>Check res fetchHistory",res.results)
+    if (res && res.results ){
+      console.log(">>>check res",res)
+
+      //total_pages = Math.ceil(res.count/res.length)
+      // setTotalPages(total_pages)  
+      // ....
+
+        setTotalDocs(res.count)
+        let listDocs = res.results
+        setListDocs(listDocs)
+        let  totalPages = Math.ceil(res.count/res.length)
+        setTotalPages(totalPages)
     }
     
   }
 
-
+  //console.log(">>>Check res listDocs:",listDocs)
 
   const handlePageClick =(event)=>{
   getDocs(+event.selected +1);
   }
 
-  const handleDeleteDocsFromModal = (docs)=>{
-    let cloneListDocs = _.cloneDeep(listDocs);
-    cloneListDocs = cloneListDocs.filter(item => item.id !== docs.id)
-    setListDocs(cloneListDocs);
-  }
+  
   const handleSort = (sortBy,sortField)=>{
     setSortBy(sortBy);
     setSortField(sortField)
@@ -103,7 +106,7 @@ const History = (props)=> {
         result.push(["Id","Action","Created at"]);
         listDocs.map((item,index) => {
           let arr = [];
-          arr[0]=index;
+          arr[0]=index+1;
           arr[1]=item.action;
           arr[2]=item.createdAt;
           result.push(arr)
@@ -112,6 +115,7 @@ const History = (props)=> {
         done();
       }
     }
+   // console.log(">>>Check list history:",listDocs)
     // const handleImportCSV = (event)=>{
     //   if (event.target && event.target.files && event.target.files[0]){
     //       let file = event.target.files[0];
@@ -178,7 +182,7 @@ const History = (props)=> {
                 data={dataExport}
                 asyncOnClick={true}
                 onClick={getDocsExport}
-                filename={"users.csv"}
+                filename={"history.csv"}
                 className="btn btn-primary"
                 target="_blank">
               <i className="fa-solid fa-file-arrow-down"></i> Export</CSVLink>
@@ -250,9 +254,10 @@ const History = (props)=> {
                 {listDocs && listDocs.length>0 && listDocs.map((item,index)=>{
                   return (
                     <tr key={`docs-${index}`}>
-                  <td>{item.id}</td>
+                  <td>{index+1}</td>
                   <td>{item.action}</td>
-                  <td>{item.createdAt}</td>
+                  <td>{item.created_at}</td>
+                  
                   {/* <td>{item.createdAt}</td>
                   <td>{item.location}</td>
                   <td>
@@ -279,7 +284,7 @@ const History = (props)=> {
         nextLabel="next >"
         onPageChange={handlePageClick}
         pageRangeDisplayed={10}
-        pageCount={totalPages}
+        pageCount={10}
         previousLabel="< previous"
         pageClassName='page-item'
         pageLinkClassName='page-link'
@@ -293,24 +298,9 @@ const History = (props)=> {
         activeClassName='active'
 
       />
-       <ModelAddNewDocs
-        show={isShowModalAddNew}
-        handleClose={handleClose}
-        handleUpdateTable={handleUpdateTable}
-      /> 
-      <ModalEditDocs
-        show={isShowModalEdit}
-        dataUserDocs={dataDocsEdit}
-        handleClose={handleClose}
-        handleEditDocsFromModal ={handleEditDocsFromModal}
-        handleUpdateTable={handleUpdateTable}
-      /> 
-      <ModalConfirmDocs
-        show={isShowModalDelete}
-        handleClose ={handleClose}
-        dataDocsDelete={dataDocsDelete}
-        handleDeleteDocsFromModal={handleDeleteDocsFromModal}
-      />
+       
+      
+      
     </>
   );
 }

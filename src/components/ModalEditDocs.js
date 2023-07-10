@@ -11,7 +11,7 @@ const ModalEditDocs=(props)=>{
     const[group_rack_id,setGroupRackID] = useState("");
     const[rack_id_Document,setRackID]=useState("");
     const[id,setID]=useState("");
-   
+    console.log(">>> Data docs edit::::",dataDocsEdit)
     const handleEditDocs=async()=>{
         var today = new Date();
         var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
@@ -59,7 +59,7 @@ const ModalEditDocs=(props)=>{
                                 <input 
                                     type="text" 
                                     className="form-control" 
-                                    // placeholder =
+                                    // placeholder ={dataDocsEdit.id}
                                     value={id}
                                     onChange={(event)=>setID(event.target.value)}
                                 />
